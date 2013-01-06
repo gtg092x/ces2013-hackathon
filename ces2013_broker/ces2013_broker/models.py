@@ -26,16 +26,16 @@ class SiteFlatPage(FlatPage):
         proxy=True
         
 class IncomingMessage(models.Model):
-    created_on = models.DateTimeField(auto_now_add=True,blank=True)
-    modified_on = models.DateTimeField(auto_now=True,blank=True)
+    #created_on = models.DateTimeField(auto_now_add=True,blank=True)
+    #modified_on = models.DateTimeField(auto_now=True,blank=True)
     message = models.TextField()
     viewed = models.BooleanField(default=False,blank=True)
     to_number = models.CharField(max_length=10)
     from_number = models.CharField(max_length=10)
     
 class OutgoingMessage(models.Model):
-    created_on = models.DateTimeField(auto_now_add=True,blank=True)
-    modified_on = models.DateTimeField(auto_now=True,blank=True)
+    #created_on = models.DateTimeField(auto_now_add=True,blank=True)
+    #modified_on = models.DateTimeField(auto_now=True,blank=True)
     message = models.TextField()
     sent = models.BooleanField(default=False,blank=True)
     to_number = models.CharField(max_length=10)

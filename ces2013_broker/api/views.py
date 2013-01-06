@@ -52,7 +52,7 @@ class IncomingMessageList(generics.ListCreateAPIView):
     API endpoint that represents a list of Incoming Messages.
     """
     model = IncomingMessage
-    serializer_class = IncomingMessageSerializer
+    #serializer_class = IncomingMessageSerializer
     permission_classes = (AllowAny,)
     def filter_queryset(self, queryset):
         """
@@ -80,7 +80,7 @@ class OutgoingMessageList(generics.ListCreateAPIView):
     """
     permission_classes = (AllowAny,)
     model = OutgoingMessage
-    serializer_class = OutgoingMessageSerializer
+    #serializer_class = OutgoingMessageSerializer
     def filter_queryset(self, queryset):
         """
         Given a queryset, filter it with whichever filter backend is in use.

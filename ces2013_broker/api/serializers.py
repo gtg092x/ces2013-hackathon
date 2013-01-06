@@ -17,6 +17,7 @@ class OutgoingMessageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = OutgoingMessage
         fields = ('message', 'to_number', 'from_number',)
+    
         
 class IncomingMessageSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
