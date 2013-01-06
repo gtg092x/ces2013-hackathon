@@ -1,0 +1,50 @@
+<project name="ces2013.graphitiy.com" default="publish" basedir=".">
+    <description>
+        simple example build file
+    </description>
+  <!-- set global properties for this build -->
+  <property name="src" location="src"/>
+  <property name="build" location="build"/>
+  <property name="dist"  location="dist"/>
+ 
+	
+  
+  <target name="publish">
+  		<tstamp/>  		  
+  		    <ftp  verbose="yes" userid="www_publish" remotedir="/home/www_publish/sites/ces2013.graphitiy.com" 
+  		    	passive="no" depends="no" password="drake7" server="ces2013.graphitiy.com">
+  		    	<fileset dir=".">
+  		    		<exclude name="*.svn" />
+  		    		<exclude name=".project" />
+  		    		<exclude name=".svn" />
+  		    		<exclude name="*.pyc" />
+  		    		<exclude name="build.xml" />
+  		    		<exclude name="design/**" />
+  		    		<exclude name="public/content/**" />
+  		    		<exclude name="templates/**" />  
+  		    	</fileset>  		    	
+  </ftp>
+  	<ftp  verbose="yes" userid="www_publish" remotedir="/home/www_publish/sites/ces2013.graphitiy.com" 
+  	  		    	passive="no" depends="no" password="drake7" server="ces2013.graphitiy.com">
+  	  		    	<fileset dir=".">  		    		
+  	  		    		<include name="graphitiy/production_wsgi.py" />
+  	  		    	</fileset>  		    	
+  	  </ftp>
+  	<ftp  verbose="yes" userid="www_publish" remotedir="/home/www_publish/sites/ces2013.graphitiy.com" 
+  	  	  		    	passive="no" depends="no" password="drake7" server="ces2013.graphitiy.com">
+  	  	  		    	<fileset dir=".">
+  	  	  		    		<include name="templates/**" />  	  		    		
+  	  	  		    	</fileset>  		    	
+  	  	  </ftp>
+  	<ftp  verbose="yes" userid="www_publish" remotedir="/home/www_publish/sites/ces2013.graphitiy.com" 
+  	  		    	passive="no" depends="no" password="drake7" server="ces2013.graphitiy.com">
+  	  		    	<fileset dir=".">
+  	  		    		<include name="public/content/**" />  	  		    		
+  	  		    	</fileset>  		    	
+  	  </ftp>
+  
+    
+  	
+  </target>
+
+</project>

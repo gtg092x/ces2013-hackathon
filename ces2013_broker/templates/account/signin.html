@@ -1,0 +1,26 @@
+{% extends "shared/_layout.html" %}
+{% load crispy_forms_tags %}
+
+{% block meta %}
+
+{% endblock %}
+
+
+
+{% block content %}
+<div class="page-header inset">
+	<h1 class='arrows'>Sign In <small>Welcome back!</small></h1>
+</div>
+
+<div class=' inset'>
+	<form action="{{ request.get_full_path }}" class=" form-horizontal" method="post">
+	{% csrf_token %}
+  	{{ form|crispy }}
+  	
+  	<div class="form-actions">
+  	<input type="submit"    name="submit"    value="Submit"  class="btn btn btn-primary" id="submit-id-submit"    />
+  	</div>
+	</form>
+</div>
+
+{% endblock %}
