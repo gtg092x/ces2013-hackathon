@@ -203,8 +203,14 @@ View.callMessage = function(body,to,from,onClick){
 //only fires when there are new messages
 Graphitiy.message_poll.onUpdate = function(messages){
 	
-	if(messages.length)
-		MessageModel.accept(messages[messages.length-1]);
+	if(messages.length){
+		var message = messages[messages.length-1];
+		if(message.message.length<80){
+			MessageModel.accept(message);
+		}else{
+			View.callMessage("Sorry! I'm currently driving and cannot read long messages. Please send a shorter text, or, better yet, wait until I'm off the road!",message.from_number,message.to_number);
+		}
+	}
 };
 
 ResponseModel.defaultResponses = function(message){
@@ -253,7 +259,7 @@ ResponseModel.responsesFromMessage = function(message,callback){
 		(message.message.trim().match(/(or)|(and)/g)||[]).length){
 		callback(ResponseModel.listFromMessage(message.message));
 	}else{
-		ResponseModel.guess(message,callback);
+		callback(ResponseModel.yesOrNoResponses());
 	}
 	
 };
