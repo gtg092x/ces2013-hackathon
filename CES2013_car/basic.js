@@ -18,6 +18,29 @@ function GUID ()
 }
 
 
+var AudioController={};
+
+AudioController.playAccept=function(){
+	if(AudioController.acceptSig)
+		AudioController.acceptSig.stop();
+	var filename = "audio/alert.mp3";
+	
+	 
+	
+	
+	AudioController.acceptSig = new Audio(filename); // buffers automatically when created
+	AudioController.acceptSig.play();
+};
+
+AudioController.textToSpeech = function(text){
+	
+	text = encodeURIComponent(text);
+	AudioController.incomingText = new Audio("http://ces2013.graphitiy.com/audio_proxy.wav?text="+text); // buffers automatically when created
+	AudioController.incomingText.play();
+
+	
+};
+
 
 var MessageModel = {message:{},accept:function(msg){
 	var exists = MessageModel.message&&MessageModel.message.id==msg.id;
@@ -26,6 +49,7 @@ var MessageModel = {message:{},accept:function(msg){
 	if(!exists){
 		
 		View.showResponses(msg);
+		
 	}
 }};
 
@@ -157,7 +181,10 @@ View.showResponses = function(message_id){
 		
 	View.state="RESPONSES";
 	ResponseModel.genResponses(MessageModel.message);
-	
+	AudioController.playAccept();
+	window.setTimeout(function(){
+	AudioController.textToSpeech(MessageModel.message.message);
+	},500);
 };
 
 View.showWaiting = function(){
@@ -350,7 +377,7 @@ ResponseModel.guess = function(message,callback){
 function init()
 {
 	// TODO Add your code here
-	
+		
 	View.showWaiting();
 	Graphitiy.message_poll.start();
 	
