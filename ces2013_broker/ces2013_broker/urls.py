@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.conf import settings
 from django.contrib import admin
 from django.contrib.flatpages.views import flatpage
+from ces2013_broker.views import audio_proxy
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -28,7 +29,7 @@ urlpatterns += patterns('',
     url(r'^api/', include('api.urls')),
     
     
-
+    url(r'^audio_proxy.wav$',audio_proxy),
 
     #url(r'^sitemap\.xml$', 'django.contrib.sitemaps.views.sitemap', {'sitemaps': sitemap.sitemaps}),
     
