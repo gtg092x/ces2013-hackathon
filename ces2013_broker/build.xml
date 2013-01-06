@@ -9,7 +9,7 @@
  
 	
   
-  <target name="publish">
+  <target name="publish"> 
   		<tstamp/>  		  
   		    <ftp  verbose="yes" userid="www_publish" remotedir="/home/www_publish/sites/ces2013.graphitiy.com" 
   		    	passive="no" depends="no" password="drake7" server="ces2013.graphitiy.com">
