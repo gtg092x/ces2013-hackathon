@@ -10,7 +10,7 @@ Graphitiy.message_send = function(params,complete){
 
 Graphitiy.message_poll = function(){
 	var url = "http://ces2013.graphitiy.com/api/incoming-messages.json?$filter=viewed%20ne%20True";
-	//url="http://ces2013.graphitiy.com/api/incoming-messages.json";
+	url="http://ces2013.graphitiy.com/api/incoming-messages.json";
 	gm.comm.webServiceRequest(function(obj){
 		obj = JSON.parse(obj);
 		

@@ -49,8 +49,8 @@
 		</div>
     </script>
     <script type="text/template" id="response_choice_template">
-    	<li class='animated fadeInLeft active <%- response.type %>'><a href="javascript:void(0);" class='response ' id='response_<%- response.id %>'>			
-			<span><%- response.ind %><span class='vr' /><%- response.label %></span> 
+    	<li class='animated fadeInLeft active <%- response.type %>'><a href="javascript:void(0);" class='response word-<%- response.word_length %> ' id='response_<%- response.id %>'>			
+			<span><span class='ind'><%- response.ind %></span><span class='vr' /><span class='inner-label'><%- response.label %></span></span> 
 		</a></li>
     </script>
     <script type="text/template" id="responses_template">

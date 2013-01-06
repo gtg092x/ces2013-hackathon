@@ -1,3 +1,4 @@
+var CHOICE_LIMIT=4;
 function GUID ()
 {
     var S4 = function ()
@@ -136,6 +137,16 @@ View.getChoiceResponseHtml = function(response,i){
         );
     var ind = String.fromCharCode(97 + i).toUpperCase();
     response.ind = ind;
+    
+    if(response.label.length<12){
+    	response.word_length="short";
+    }else if(response.label.length<18){
+    	response.word_length="medium";
+    }else{
+    	response.word_length="long";
+    }
+    if(response.label.length>28)
+    	response.label = response.label.substring(0,28).trim()+"..."
     //var body = response;
 	return	template({response:response});	
 };
@@ -171,15 +182,22 @@ View.appendResponse = function(response,i){
 		var response =ResponseModel.responses[id]; 
 		var body = response.content;
 		
-		Graphitiy.message_send({message:body,to_number:Model.message.message.from_number,from_number:Model.message.message.to_number},
+		View.callMessage(body,Model.message.message.from_number,Model.message.message.to_number,response.onClick);
+		
+		
+		
+	}).data("pk",response.id);
+};
+
+View.callMessage = function(body,to,from,onClick){
+	Graphitiy.message_send({message:body,to_number:to,from_number:from},
 		function(){
 			View.showWaiting();
 		});
-		if(response.onClick)
-			response.onClick();
+		if(onClick)
+			onClick();
 		else
 			Model.context.clear();
-	}).data("pk",response.id);
 };
 
 //only fires when there are new messages
@@ -222,6 +240,8 @@ ResponseModel.timeKeywords = function(message){
 };
 
 ResponseModel.responsesFromMessage = function(message,callback){
+	if((message.message.trim().match(/(or)|(and)/g)||[]).length)
+		return callback(ResponseModel.listFromMessage(message.message));
 	if(ResponseModel.guessKeywords(message))
 		return ResponseModel.guess(message,callback);
 	
@@ -273,7 +293,7 @@ ResponseModel.listFromMessage = function(message){
 	message = message.replace(/\s*,\s*/g,",");
 	choices = message.split(",");
 	var messages = [];
-	for(var i =0;i<choices.length;i++){
+	for(var i =0;i<choices.length&&i<CHOICE_LIMIT;i++){
 		var capped = choices[i].substring(0,1).toUpperCase()+choices[i].substring(1,choices[i].length);
 		messages.push({label:capped,content:choices[i],type:"gen"});
 	};
@@ -284,25 +304,34 @@ ResponseModel.guess = function(message,callback){
 	
 	
 	gm.info.getCurrentPosition(function(pos){
-		responses = ResponseModel.yesOrNoResponses();
-		callback(responses);
-		return;
+		
 		var key = "AIzaSyCFMWMt-81s5MX69-8cwj1a-0o-X30JHuc";
 		
-		var minute_multiplier=10000000.0;
+		var minute_multiplier=3600000;
 		var coords = (pos.coords.latitude/minute_multiplier)+","+(pos.coords.longitude/minute_multiplier);
-		coords="36.071302,-115.135551";
+		//coords="36.071302,-115.135551";
 		var placesUrl ="https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+coords+"&radius=1000&types=food&sensor=false&key="+key;
-		console.log(pos);
 		console.log(placesUrl);
 		gm.comm.webServiceRequest(function(obj){
 			obj = JSON.parse(obj);
+			console.log(obj);
 			
-			responses = ResponseModel.yesOrNoResponses();
+			if(obj.results && obj.results.length){
+				responses = [];
+				var results=obj.results;
+				for(var i=0;i<obj.results.length&&i<CHOICE_LIMIT;i++){
+				
+					responses.push({content:results[i].name,label:results[i].name,type:"gen"});
+				
+				}
+			}else{
 			
+				responses = ResponseModel.yesOrNoResponses();
 			
+			}
 			
 			callback(responses);
+			
 			
 		}, function(){
 			console.log(arguments);
