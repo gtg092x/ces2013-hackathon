@@ -61,7 +61,9 @@ ResponseModel.act = function(responses){
 		ResponseModel.responses[i].id=id;
 		ResponseModel.responses[id]=ResponseModel.responses[i];
 	}
-	View.draw();
+	View.clear(function(){
+		View.draw();
+	});
 };
 
 var Model = {response:ResponseModel,message:MessageModel,context:ContextModel}; 
@@ -74,6 +76,22 @@ View.draw = function(){
 		View.drawWaiting();
 	else
 		View.drawResponses();
+		
+	$('.fadeInRight').removeClass('fadeInRight').removeClass('fadeOutRight').addClass('fadeInRight');
+	$('.fadeInLeft').removeClass('fadeInLeft').removeClass('fadeOutLeft').addClass('fadeInLeft');
+	$('.fadeInUp').removeClass('fadeInUp').removeClass('fadeOutUp').addClass('fadeInUp');
+	$('.fadeIn').removeClass('fadeIn').removeClass('fadeOut').addClass('fadeIn');
+};
+
+View.clear = function(callback){
+	$('.fadeInRight').removeClass('fadeInRight').addClass('fadeOutRight');
+	$('.fadeInLeft').removeClass('fadeInLeft').addClass('fadeOutLeft');
+	$('.fadeInUp').removeClass('fadeInUp').addClass('fadeOutUp');
+	$('.fadeIn').removeClass('fadeIn').addClass('fadeOut');
+	var wait = window.setTimeout( function(){
+			callback();},
+			500
+	);
 };
 
 View.drawResponses = function(){
@@ -88,11 +106,14 @@ View.drawResponses = function(){
 		template( {} )
 	);
 	for(var i=0;i< ResponseModel.responses.length;i++){
-		View.appendResponse(ResponseModel.responses[i]);		
+		View.appendResponse(ResponseModel.responses[i],i);		
 	}
 	
 	$("#message").html(
 		Model.message.message.message
+	);
+	$("#sender").html(
+		"from <span id='from'>"+Model.message.message.from_number+"</span>:"
 	);
 };
 
@@ -109,10 +130,13 @@ View.drawWaiting = function(){
 
 
 
-View.getChoiceResponseHtml = function(response){
+View.getChoiceResponseHtml = function(response,i){
 	var template = _.template(
             $( "script#response_choice_template" ).html()
         );
+    var ind = String.fromCharCode(97 + i).toUpperCase();
+    response.ind = ind;
+    //var body = response;
 	return	template({response:response});	
 };
 
@@ -122,20 +146,24 @@ View.showResponses = function(message_id){
 		
 	View.state="RESPONSES";
 	ResponseModel.genResponses(MessageModel.message);
+	
 };
 
 View.showWaiting = function(){
 	
 	MessageModel.message=null;	
 	View.state="WAITING";
-	View.draw();
+	View.clear(function(){
+		View.draw();
+	});
+	
 };
 
  
-View.appendResponse = function(response){
+View.appendResponse = function(response,i){
 	
 	$("#responses").append(
-		View.getChoiceResponseHtml(response)
+		View.getChoiceResponseHtml(response,i)
 	);
 	
 	$("#response_"+response.id,"#responses").bind("click",function(){
@@ -164,7 +192,7 @@ Graphitiy.message_poll.onUpdate = function(messages){
 ResponseModel.defaultResponses = function(message){
 	
 	return [		
-		{type:"system",label:"(I'm driving.)",content:"I can't answer right now, I'm driving. I can get back to you in x minutes."}
+		{type:"system",label:"(it can wait)",content:"I can't answer right now, I'm driving. I can get back to you in x minutes."}
 	];
 };
 
@@ -186,14 +214,20 @@ ResponseModel.responsesFromContext = function(context){
 };
 
 ResponseModel.guessKeywords = function(message){
-	return message.message.search(/(food)|(restaurant)|(eat)|(breakfast)/)>-1;
+	return message.message.search(/where.{0,50}((food)|(restaurant)|(eat)|(breakfast)|(dinner))/i)>-1;
+};
+
+ResponseModel.timeKeywords = function(message){
+	return message.message.search(/(when)|(how long)|(time)/i)>-1;
 };
 
 ResponseModel.responsesFromMessage = function(message,callback){
 	if(ResponseModel.guessKeywords(message))
 		return ResponseModel.guess(message,callback);
-		
-	if(Model.context.request=="bool"){
+	
+	if(ResponseModel.timeKeywords(message)){
+		callback(ResponseModel.timeResponses());
+	}else if(Model.context.request=="bool"){
 		callback(ResponseModel.yesOrNoResponses());
 	}else if(Model.context.request=="list" || 
 		(message.message.trim().match(/(or)|(and)/g)||[]).length){
@@ -204,8 +238,19 @@ ResponseModel.responsesFromMessage = function(message,callback){
 	
 };
 
+ResponseModel.timeResponses = function(){
+	ContextModel.mode="time";
+	return [
+				{label:"1 hour",content:"1 hour from now",type:"gen"},
+				{label:"30 minutes",content:"30 minutes from now",type:"gen"},
+				{label:"15 minutes",content:"15 minutes from now",type:"gen"},
+				{label:"10 minutes",content:"10 minutes from now",type:"gen"}				
+			];
+};
+
 ResponseModel.yesOrNoResponses = function(){
 	ContextModel.mode="yesorno";
+	
 	return [
 				{label:"Yes",content:"Yes",type:"gen"},
 				{label:"No",content:"No",type:"gen"},
@@ -270,6 +315,7 @@ ResponseModel.guess = function(message,callback){
 function init()
 {
 	// TODO Add your code here
+	
 	View.showWaiting();
 	Graphitiy.message_poll.start();
 	
