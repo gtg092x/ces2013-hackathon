@@ -1,0 +1,73 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:text="Receive Service"
+        android:textAlignment="center"
+        android:width="100dp" />
+
+    <Button
+        android:id="@+id/receive_on"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:layout_marginTop="25dp"
+        android:text="On"
+        android:width="48dp" />
+
+    <Button
+        android:id="@+id/ReceiveOff"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/receive_on"
+        android:layout_alignBottom="@+id/receive_on"
+        android:layout_alignRight="@+id/textView1"
+        android:text="Off"
+        android:width="48dp" />
+
+    <Button
+        android:id="@+id/SendOn"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/TextView01"
+        android:layout_below="@+id/TextView01"
+        android:layout_marginTop="34dp"
+        android:text="On"
+        android:width="48dp" />
+
+    <TextView
+        android:id="@+id/TextView01"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/receive_on"
+        android:layout_below="@+id/receive_on"
+        android:layout_marginTop="94dp"
+        android:text="Send Service"
+        android:textAlignment="center"
+        android:width="100dp" />
+
+    <Button
+        android:id="@+id/SendOff"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/SendOn"
+        android:layout_alignBottom="@+id/SendOn"
+        android:layout_alignRight="@+id/TextView01"
+        android:text="Off"
+        android:width="48dp" />
+
+</RelativeLayout>
